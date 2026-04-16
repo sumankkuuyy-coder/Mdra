@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PMMY Mega Portal | 2026 Official Digital Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --gov-blue: #003366;
+            --mudra-orange: #ff9933;
+            --mudra-green: #2e7d32;
+            --bg-body: #f0f4f7;
+            --card-white: #ffffff;
+        }
+
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; background: var(--bg-body); color: #2c3e50; }
+
+        /* Top Bar */
+        .top-strip { background: #000; color: #fff; font-size: 10px; padding: 5px 15px; display: flex; justify-content: space-between; }
+
+        /* Header - Right Logo Removed */
+        header { 
+            background: var(--card-white); padding: 12px 20px; 
+            display: flex; align-items: center; border-bottom: 4px solid var(--gov-blue);
+            position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        header img { height: 55px; }
+
+        /* Hero Mega Section */
+        .hero {
+            background: linear-gradient(135deg, rgba(0,51,102,0.95), rgba(0,51,102,0.8)), url('https://www.mudra.org.in/Content/img/slider/1.jpg');
+            background-size: cover; padding: 60px 20px; color: #fff; text-align: center;
+        }
+        .hero h1 { font-size: 26px; margin: 0; font-weight: 900; }
+        .hero p { font-size: 14px; margin: 15px 0 25px; line-height: 1.6; }
+
+        /* Main Content Grid */
+        .main-container { padding: 15px; margin-bottom: 120px; }
+
+        .mega-card { background: var(--card-white); border-radius: 15px; padding: 20px; margin-bottom: 25px; box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+        .section-h { font-size: 19px; color: var(--gov-blue); font-weight: 800; margin-bottom: 20px; display: flex; align-items: center; gap: 12px; border-bottom: 2px solid #f1f1f1; padding-bottom: 10px; }
+        
+        /* 50x Detail Grid */
+        .feature-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
+        .feature-item { padding: 15px; border-radius: 12px; text-align: center; border: 1px solid #f0f0f0; transition: 0.3s; }
+        .feature-item:hover { transform: translateY(-5px); border-color: var(--mudra-orange); }
+        .feature-item i { font-size: 32px; margin-bottom: 10px; display: block; }
+        .feature-item h4 { font-size: 13px; margin: 0; color: var(--gov-blue); }
+        .feature-item p { font-size: 10px; color: #7f8c8d; margin-top: 5px; }
+
+        /* Color Classes for Icons */
+        .c-orange { color: #ff9800; }
+        .c-blue { color: #2196f3; }
+        .c-green { color: #4caf50; }
+        .c-red { color: #f44336; }
+        .c-purple { color: #9c27b0; }
+        .c-teal { color: #009688; }
+
+        /* Detailed Table */
+        .table-responsive { overflow-x: auto; margin-top: 15px; }
+        .data-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+        .data-table th { background: #eef2f7; color: var(--gov-blue); padding: 12px; text-align: left; border: 1px solid #dee2e6; }
+        .data-table td { padding: 12px; border: 1px solid #dee2e6; }
+
+        /* Steps Timeline */
+        .step-box { position: relative; padding-left: 40px; margin-bottom: 20px; }
+        .step-num { position: absolute; left: 0; top: 0; width: 25px; height: 25px; background: var(--mudra-orange); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 12px; }
+        .step-box h5 { margin: 0; font-size: 14px; color: var(--gov-blue); }
+        .step-box p { margin: 5px 0 0; font-size: 11px; color: #666; }
+
+        /* Floating Apply Now */
+        .float-btn {
+            position: fixed; bottom: 20px; left: 15px; right: 15px;
+            background: linear-gradient(45deg, #003366, #0052a3);
+            color: #fff; text-align: center; padding: 18px; border-radius: 15px;
+            text-decoration: none; font-weight: 900; font-size: 16px;
+            box-shadow: 0 10px 30px rgba(0,51,102,0.4); z-index: 9999;
+            display: flex; justify-content: center; align-items: center; gap: 12px;
+            border: 2px solid rgba(255,255,255,0.2);
+        }
+
+        /* Footer */
+        footer { background: #111; color: #888; padding: 50px 20px 110px; text-align: center; }
+        .footer-logo { 
+            width: 200px; background: #fff; padding: 10px; border-radius: 10px; margin-bottom: 25px; 
+        }
+        .footer-links { font-size: 12px; line-height: 2.5; margin-bottom: 20px; }
+        .footer-links span { margin: 0 10px; color: #bbb; }
+    </style>
+</head>
+<body>
+
+    <div class="top-strip">
+        <span>भारत सरकार | GOVT OF INDIA</span>
+        <span>Aadhar Secure Portal <i class="fas fa-lock"></i></span>
+    </div>
+
+    <header>
+        <img src="https://i.ibb.co/Kcmn2nhh/Pradhanmantri-Mudra-Yojna-Preview.png" alt="PMMY Logo">
+    </header>
+
+    <div class="hero">
+        <h1>प्रधानमंत्री मुद्रा योजना (PMMY)</h1>
+        <p>आत्मनिर्भर भारत: छोटे उद्योगों को बिना किसी गारंटी के ₹10,00,000/- तक की वित्तीय सहायता।</p>
+        <div style="background: rgba(255,255,255,0.15); padding: 10px; border-radius: 10px; font-size: 11px;">
+            <i class="fas fa-university"></i> 150+ Banks & NBFCs are Linked
+        </div>
+    </div>
+
+    <div class="main-container">
+
+        <div class="mega-card">
+            <div class="section-h"><i class="fas fa-store-alt c-orange"></i> किन कार्यों के लिए ऋण मिलता है?</div>
+            <div class="feature-grid">
+                <div class="feature-item"><i class="fas fa-utensils c-red"></i><h4>फूड सेक्टर</h4><p>होटल, कैंटीन, आचार, पापड़ उद्योग</p></div>
+                <div class="feature-item"><i class="fas fa-tshirt c-purple"></i><h4>टेक्सटाइल</h4><p>बुनाई, सिलाई, कढ़ाई, जरी काम</p></div>
+                <div class="feature-item"><i class="fas fa-tools c-blue"></i><h4>सर्विस सेक्टर</h4><p>जिम, सैलून, रिपेयर शॉप, ड्राई क्लीनिंग</p></div>
+                <div class="feature-item"><i class="fas fa-truck c-green"></i><h4>ट्रांसपोर्ट</h4><p>ऑटो, टैक्सी, ट्रैक्टर, ई-रिक्शा</p></div>
+                <div class="feature-item"><i class="fas fa-laptop c-blue"></i><h4>डिजिटल सेंटर</h4><p>साइबर कैफे, फोटोकॉपी, CSC</p></div>
+                <div class="feature-item"><i class="fas fa-cow c-orange"></i><h4>कृषि सहयोगी</h4><p>डेयरी, पोल्ट्री, मधुमक्खी पालन</p></div>
+            </div>
+        </div>
+
+        <div class="mega-card">
+            <div class="section-h"><i class="fas fa-layer-group c-blue"></i> ऋण की श्रेणियां और ब्याज</div>
+            <div class="table-responsive">
+                <table class="data-table">
+                    <tr><th>योजना</th><th>लोन सीमा</th><th>ब्याज (Approx)</th></tr>
+                    <tr><td><b>शिशु (Shishu)</b></td><td>₹50,000/-</td><td>9% - 12% p.a.</td></tr>
+                    <tr><td><b>किशोर (Kishore)</b></td><td>₹5,00,000/-</td><td>10% - 14% p.a.</td></tr>
+                    <tr><td><b>तरुण (Tarun)</b></td><td>₹10,00,000/-</td><td>11% - 16% p.a.</td></tr>
+                </table>
+            </div>
+        </div>
+
+        <div class="mega-card">
+            <div class="section-h"><i class="fas fa-user-check c-green"></i> पूर्ण पात्रता (Who is Eligible?)</div>
+            <div class="step-box">
+                <div class="step-num">1</div>
+                <h5>भारतीय नागरिकता</h5>
+                <p>आवेदक भारत का निवासी होना चाहिए (आयु 18+ वर्ष)।</p>
+            </div>
+            <div class="step-box">
+                <div class="step-num">2</div>
+                <h5>व्यवसाय का प्रकार</h5>
+                <p>केवल गैर-कृषि, आय अर्जित करने वाली गतिविधियां।</p>
+            </div>
+            <div class="step-box">
+                <div class="step-num">3</div>
+                <h5>सिबिल स्कोर (CIBIL)</h5>
+                <p>700+ स्कोर होने पर लोन जल्दी स्वीकृत होता है।</p>
+            </div>
+            <div class="step-box">
+                <div class="step-num">4</div>
+                <h5>महिला उद्यमी</h5>
+                <p>महिलाओं को ब्याज दरों में 0.25% की अतिरिक्त छूट।</p>
+            </div>
+        </div>
+
+        <div class="mega-card">
+            <div class="section-h"><i class="fas fa-file-contract c-red"></i> दस्तावेजों का पूर्ण विवरण</div>
+            <div class="feature-grid">
+                <div class="feature-item"><i class="fas fa-id-card c-blue"></i><h4>ID Proof</h4><p>आधार, पैन, वोटर आईडी अनिवार्य</p></div>
+                <div class="feature-item"><i class="fas fa-home c-green"></i><h4>Address</h4><p>राशन कार्ड, बिजली बिल, रेंट एग्रीमेंट</p></div>
+                <div class="feature-item"><i class="fas fa-university c-orange"></i><h4>Finance</h4><p>6 माह का बैंक स्टेटमेंट, चेक बुक</p></div>
+                <div class="feature-item"><i class="fas fa-certificate c-purple"></i><h4>Business</h4><p>GST, ट्रेड लाइसेंस, उद्यम आधार</p></div>
+            </div>
+        </div>
+
+        <div class="mega-card" style="background: #fff9e6; border: 1px solid #ffeeba;">
+            <div class="section-h"><i class="fas fa-tasks c-orange"></i> आवेदन की पूर्ण प्रक्रिया</div>
+            <p style="font-size: 11px;">1. नीचे दिए गए <b>Apply</b> बटन पर क्लिक करें।<br>
+            2. 40+ व्यक्तिगत और व्यावसायिक फील्ड्स को भरें।<br>
+            3. डिजिटल सिग्नेचर और आधार OTP सत्यापन करें।<br>
+            4. <b>Approval Letter</b> डाउनलोड करें और बैंक में जमा करें।</p>
+        </div>
+
+        <div class="mega-card">
+            <div class="section-h"><i class="fas fa-headset c-purple"></i> राज्य हेल्पलाइन नंबर</div>
+            <div class="table-responsive">
+                <table class="data-table">
+                    <tr><td>उत्तर प्रदेश</td><td>1800-180-2222</td></tr>
+                    <tr><td>बिहार / झारखंड</td><td>1800-345-6222</td></tr>
+                    <tr><td>मध्य प्रदेश</td><td>1800-233-4035</td></tr>
+                    <tr><td>राजस्थान</td><td>1800-180-6121</td></tr>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <footer>
+        <img src="https://i.ibb.co/Kcmn2nhh/Pradhanmantri-Mudra-Yojna-Preview.png" class="footer-logo" alt="PMMY Footer Logo">
+        <div class="footer-links">
+            <span>Privacy Policy</span> | <span>Terms of Service</span> | <span>FAQ</span> | <span>Grievance</span>
+        </div>
+        <div style="font-size: 11px; line-height: 1.8;">
+            <p>वित्त मंत्रालय, भारत सरकार द्वारा संचालित।</p>
+            <p>सम्पर्क: 1800-11-0001 (Toll Free)</p>
+            <p style="margin-top: 20px; border-top: 1px solid #333; padding-top: 20px;">&copy; 2026 PMMY Official Dashboard | Digital India</p>
+        </div>
+    </footer>
+
+    <a href="form.html" class="float-btn">
+        <i class="fas fa-paper-plane"></i> अभी ऑनलाइन आवेदन शुरू करें
+    </a>
+
+</body>
+</html>
+
