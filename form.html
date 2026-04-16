@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PMMY - Official Digital Application Portal</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        :root {
+            --gov-blue: #003366;
+            --mudra-orange: #FF9933;
+            --mudra-green: #138808;
+            --light-grey: #f8f9fa;
+        }
+
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #e9ecef; margin: 0; padding: 20px; }
+        
+        .main-card {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            border-radius: 8px;
+            overflow: hidden;
+            border-top: 10px solid var(--mudra-orange);
+        }
+
+        .header-section { text-align: center; padding: 30px; border-bottom: 2px solid #eee; }
+        .logo-main { width: 220px; margin-bottom: 10px; }
+
+        .form-step { display: none; padding: 40px; }
+        .form-step.active { display: block; animation: fadeIn 0.4s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .section-banner {
+            background: var(--gov-blue); color: white;
+            padding: 10px 20px; font-weight: bold; font-size: 14px;
+            margin: 25px 0 15px; text-transform: uppercase; border-radius: 4px;
+        }
+
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        
+        .field-group { display: flex; flex-direction: column; margin-bottom: 15px; }
+        label { font-size: 11px; font-weight: 700; color: #444; margin-bottom: 6px; text-transform: uppercase; }
+        input, select, textarea { 
+            padding: 12px; border: 1px solid #ccc; border-radius: 5px; font-size: 14px; transition: 0.3s;
+        }
+        input:focus { border-color: var(--mudra-orange); outline: none; box-shadow: 0 0 5px rgba(255,153,51,0.3); }
+
+        .footer-btns { background: #f1f3f5; padding: 25px; display: flex; justify-content: space-between; border-top: 1px solid #ddd; }
+        button { padding: 12px 30px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; text-transform: uppercase; }
+        .btn-back { background: #adb5bd; color: white; }
+        .btn-next { background: var(--mudra-orange); color: white; }
+        .btn-submit { background: var(--mudra-green); color: white; }
+
+        /* PDF / PRINT TEMPLATE */
+        #pdfTemplate {
+            display: none; padding: 40px; font-family: 'Times New Roman', serif; color: #000;
+        }
+        .print-header { text-align: center; border-bottom: 2px solid #000; padding-bottom: 20px; margin-bottom: 20px; }
+        .receipt-table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+        .receipt-table td { border: 1px solid #000; padding: 10px; font-size: 14px; }
+        .bg-grey { background: #f0f0f0; font-weight: bold; }
+        
+        .seal-approved {
+            float: right; width: 150px; height: 150px; border: 4px double var(--mudra-green);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            text-align: center; color: var(--mudra-green); font-weight: bold;
+            transform: rotate(-15deg); margin-top: 20px; opacity: 0.8;
+        }
+
+        @media (max-width: 768px) { .grid-3, .grid-2 { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+<div class="main-card" id="form-container">
+    <div class="header-section">
+        <img src="https://i.ibb.co/Kcmn2nhh/Pradhanmantri-Mudra-Yojna-Preview.png" class="logo-main" alt="Logo">
+        <h1>PMMY Digital Application Portal</h1>
+        <p>Government of India - Financial Services Department</p>
+    </div>
+
+    <form id="mudraForm">
+        <div class="form-step active" id="step1">
+            <div class="section-banner">I. Applicant Personal Identification</div>
+            <div class="grid-3">
+                <div class="field-group"><label>Mudra Category</label><select id="cat"><option>Shishu</option><option>Kishore</option><option>Tarun</option></select></div>
+                <div class="field-group"><label>Full Name</label><input type="text" id="name" required></div>
+                <div class="field-group"><label>Father's Name</label><input type="text" id="fname" required></div>
+                <div class="field-group"><label>Date of Birth</label><input type="date" id="dob" required></div>
+                <div class="field-group"><label>Gender</label><select id="gender"><option>Male</option><option>Female</option><option>Other</option></select></div>
+                <div class="field-group"><label>Marital Status</label><select id="marital"><option>Single</option><option>Married</option></select></div>
+                <div class="field-group"><label>Aadhaar Number</label><input type="number" id="aadhaar" required></div>
+                <div class="field-group"><label>PAN Card Number</label><input type="text" id="pan" required style="text-transform:uppercase"></div>
+                <div class="field-group"><label>Mobile Number</label><input type="tel" id="mobile" required></div>
+                <div class="field-group"><label>Alternate Mobile</label><input type="tel" id="alt_mobile"></div>
+            </div>
+            <div class="field-group"><label>Permanent Address</label><textarea id="address" rows="2" required></textarea></div>
+        </div>
+
+        <div class="form-step" id="step2">
+            <div class="section-banner">II. Enterprise & Business Details</div>
+            <div class="grid-2">
+                <div class="field-group"><label>Enterprise Name</label><input type="text" id="b_name" required></div>
+                <div class="field-group"><label>Constitution</label><select id="b_const"><option>Proprietorship</option><option>Partnership</option><option>Individual</option></select></div>
+                <div class="field-group"><label>Business Activity</label><input type="text" id="b_act" required></div>
+                <div class="field-group"><label>Business Experience</label><input type="text" id="b_exp" placeholder="e.g. 5 Years"></div>
+                <div class="field-group"><label>Business Premise</label><select id="b_premise"><option>Owned</option><option>Rented</option></select></div>
+                <div class="field-group"><label>Annual Turnover (Existing)</label><input type="number" id="b_turn" placeholder="0.00"></div>
+                <div class="field-group"><label>Proposed Loan Amount</label><input type="number" id="l_amt" required></div>
+                <div class="field-group"><label>Repayment Tenure (Months)</label><input type="number" id="l_ten" required></div>
+                <div class="field-group"><label>Project Cost (Total)</label><input type="number" id="p_cost"></div>
+                <div class="field-group"><label>Own Contribution</label><input type="number" id="own_cont"></div>
+            </div>
+            <div class="field-group"><label>Business Location Address</label><input type="text" id="b_addr" required></div>
+        </div>
+
+        <div class="form-step" id="step3">
+            <div class="section-banner">III. Banking Details & Declaration</div>
+            <div class="grid-3">
+                <div class="field-group"><label>Bank Name</label><input type="text" id="bk_name" required></div>
+                <div class="field-group"><label>Branch Name</label><input type="text" id="bk_branch" required></div>
+                <div class="field-group"><label>Account Number</label><input type="number" id="bk_acc" required></div>
+                <div class="field-group"><label>IFSC Code</label><input type="text" id="bk_ifsc" required></div>
+                <div class="field-group"><label>Account Type</label><select><option>Savings</option><option>Current</option></select></div>
+                <div class="field-group"><label>Nominee Name</label><input type="text" id="nominee"></div>
+                <div class="field-group"><label>Social Category</label><select id="soc"><option>General</option><option>OBC</option><option>SC</option><option>ST</option></select></div>
+                <div class="field-group"><label>Disability Status</label><select><option>No</option><option>Yes</option></select></div>
+                <div class="field-group"><label>Existing Loan EMI</label><input type="number" id="emi" value="0"></div>
+            </div>
+
+            <div style="background: #fff8e1; border: 1px solid #ffe082; padding: 20px; border-radius: 5px; margin-top: 15px;">
+                <h4 style="margin-top:0;">Declaration & Consent</h4>
+                <p style="font-size: 12px; line-height: 1.5;">
+                    I hereby declare that all information provided is true to the best of my knowledge. I authorize the Bank/Financial Institution to verify my details and access my credit score from bureaus. I have no outstanding defaults in any other banks.
+                </p>
+                <label style="display: flex; align-items: center; gap: 10px;">
+                    <input type="checkbox" id="agree" required> I Agree to the Terms of PMMY
+                </label>
+            </div>
+        </div>
+
+        <div class="footer-btns">
+            <button type="button" class="btn-back" id="backBtn" onclick="changeStep(-1)" style="visibility:hidden;">Back</button>
+            <button type="button" class="btn-next" id="nextBtn" onclick="changeStep(1)">Next Step</button>
+            <button type="submit" class="btn-submit" id="submitBtn" style="display:none;">Generate & Download PDF</button>
+        </div>
+    </form>
+</div>
+
+<div id="pdfTemplate">
+    <div class="print-header">
+        <img src="https://i.ibb.co/Kcmn2nhh/Pradhanmantri-Mudra-Yojna-Preview.png" width="180">
+        <h2>Pradhan Mantri Mudra Yojana (PMMY)</h2>
+        <p>Official Loan Application Summary - Govt of India</p>
+    </div>
+
+    <div style="display: flex; justify-content: space-between;">
+        <p><strong>LOAN ID:</strong> <span id="pdf-id"></span></p>
+        <p><strong>DATE:</strong> <span id="pdf-date"></span></p>
+    </div>
+
+    <table class="receipt-table">
+        <tr><td colspan="4" class="bg-grey">PART A: APPLICANT IDENTITY</td></tr>
+        <tr><td><strong>Name</strong></td><td id="pdf-name"></td><td><strong>Category</strong></td><td id="pdf-cat"></td></tr>
+        <tr><td><strong>Aadhaar</strong></td><td id="pdf-aadhaar"></td><td><strong>PAN</strong></td><td id="pdf-pan"></td></tr>
+        <tr><td><strong>Mobile</strong></td><td id="pdf-mobile"></td><td><strong>DOB</strong></td><td id="pdf-dob"></td></tr>
+        
+        <tr><td colspan="4" class="bg-grey">PART B: BUSINESS & FINANCIALS</td></tr>
+        <tr><td><strong>Enterprise</strong></td><td id="pdf-bname"></td><td><strong>Activity</strong></td><td id="pdf-bact"></td></tr>
+        <tr><td><strong>Loan Amount</strong></td><td id="pdf-lamt" style="font-weight:bold;"></td><td><strong>Tenure</strong></td><td id="pdf-lten"></td></tr>
+        
+        <tr><td colspan="4" class="bg-grey">PART C: BANKING INFORMATION</td></tr>
+        <tr><td><strong>Bank Name</strong></td><td id="pdf-bkname"></td><td><strong>Branch</strong></td><td id="pdf-bkbr"></td></tr>
+        <tr><td><strong>Account No.</strong></td><td id="pdf-bkacc"></td><td><strong>IFSC</strong></td><td id="pdf-bkifsc"></td></tr>
+    </table>
+
+    <div class="seal-approved">
+        VERIFIED &<br>DIGITALLY<br>APPROVED<br>BY PMMY
+    </div>
+
+    <div style="margin-top: 50px; font-size: 11px;">
+        <p><strong>Digital Signature:</strong> Authenticated via PMMY Portal</p>
+        <p>Note: This is an auto-generated document. Subject to final physical verification of documents.</p>
+    </div>
+</div>
+
+<script>
+    let currentStep = 1;
+    const totalSteps = 3;
+
+    function changeStep(n) {
+        const steps = document.querySelectorAll('.form-step');
+        
+        // Basic Check
+        if(n === 1) {
+            const inputs = steps[currentStep-1].querySelectorAll('input[required]');
+            for(let i=0; i<inputs.length; i++) {
+                if(!inputs[i].value) { alert("Please fill all required fields"); return; }
+            }
+        }
+
+        steps[currentStep-1].classList.remove('active');
+        currentStep += n;
+        steps[currentStep-1].classList.add('active');
+
+        document.getElementById('backBtn').style.visibility = (currentStep === 1) ? 'hidden' : 'visible';
+        document.getElementById('nextBtn').style.display = (currentStep === totalSteps) ? 'none' : 'inline-block';
+        document.getElementById('submitBtn').style.display = (currentStep === totalSteps) ? 'inline-block' : 'none';
+    }
+
+    document.getElementById('mudraForm').onsubmit = function(e) {
+        e.preventDefault();
+
+        // 1. Generate Fake ID and Mapping
+        const loanID = "PMMY" + Math.floor(100000 + Math.random() * 900000);
+        const date = new Date().toLocaleDateString('en-IN');
+
+        document.getElementById('pdf-id').innerText = loanID;
+        document.getElementById('pdf-date').innerText = date;
+        document.getElementById('pdf-name').innerText = document.getElementById('name').value;
+        document.getElementById('pdf-cat').innerText = document.getElementById('cat').value;
+        document.getElementById('pdf-aadhaar').innerText = "XXXX-XXXX-" + document.getElementById('aadhaar').value.slice(-4);
+        document.getElementById('pdf-pan').innerText = document.getElementById('pan').value.toUpperCase();
+        document.getElementById('pdf-mobile').innerText = document.getElementById('mobile').value;
+        document.getElementById('pdf-dob').innerText = document.getElementById('dob').value;
+        document.getElementById('pdf-bname').innerText = document.getElementById('b_name').value;
+        document.getElementById('pdf-bact').innerText = document.getElementById('b_act').value;
+        document.getElementById('pdf-lamt').innerText = "₹ " + parseFloat(document.getElementById('l_amt').value).toLocaleString('en-IN');
+        document.getElementById('pdf-lten').innerText = document.getElementById('l_ten').value + " Months";
+        document.getElementById('pdf-bkname').innerText = document.getElementById('bk_name').value;
+        document.getElementById('pdf-bkbr').innerText = document.getElementById('bk_branch').value;
+        document.getElementById('pdf-bkacc').innerText = document.getElementById('bk_acc').value;
+        document.getElementById('pdf-bkifsc').innerText = document.getElementById('bk_ifsc').value.toUpperCase();
+
+        // 2. Download PDF Logic
+        const element = document.getElementById('pdfTemplate');
+        element.style.display = 'block'; // Temporarily show to capture
+
+        const opt = {
+            margin: 0.5,
+            filename: `PMMY_Application_${loanID}.pdf`,
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2 },
+            jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+        };
+
+        html2pdf().set(opt).from(element).save().then(() => {
+            element.style.display = 'none';
+            alert("Loan Application Submitted Successfully!\nYour Loan ID: " + loanID);
+        });
+    };
+</script>
+
+</body>
+</html>
+
