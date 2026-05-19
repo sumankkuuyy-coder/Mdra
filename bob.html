@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced CSP Portal - Bank of Baroda Style</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #fbeee7 100%);
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Full Width Logo Container - Left Aligned for Professional Corporate Look */
+        .logo-container {
+            width: 100%;
+            background-color: #fff;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 15px 40px; /* Side padding adjusted for left alignment */
+            display: flex;
+            justify-content: flex-start; /* Aligned to Left */
+            align-items: center;
+            border-bottom: 4px solid #EE5F26;
+        }
+
+        .logo-container img {
+            width: auto;
+            max-width: 100%;
+            height: 65px; 
+            display: block;
+            object-fit: contain;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 20px;
+            flex: 1;
+        }
+
+        .main-title {
+            text-align: center;
+            color: #003366;
+            font-size: 2.5rem;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            font-weight: 800;
+        }
+
+        .sub-title {
+            text-align: center;
+            color: #555;
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            margin-bottom: 30px;
+            max-width: 100%;
+        }
+
+        .progress-container::before {
+            content: '';
+            background-color: #e0e0e0;
+            position: absolute;
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
+            height: 4px;
+            width: 100%;
+            z-index: 1;
+        }
+
+        .progress {
+            background-color: #EE5F26;
+            position: absolute;
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
+            height: 4px;
+            width: 0%;
+            z-index: 1;
+            transition: 0.4s ease;
+        }
+
+        .circle {
+            background-color: #fff;
+            color: #999;
+            border-radius: 50%;
+            height: 40px;
+            width: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid #e0e0e0;
+            z-index: 2;
+            transition: 0.4s ease;
+            font-weight: bold;
+        }
+
+        .circle.active {
+            border-color: #EE5F26;
+            color: #003366;
+            box-shadow: 0 0 10px rgba(238, 95, 38, 0.3);
+        }
+
+        /* Form Wizard Steps */
+        .form-step {
+            background: #fff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .form-step.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-header {
+            font-size: 1.4rem;
+            color: #003366;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 10px;
+            font-weight: 700;
+        }
+
+        /* Layout Grid */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .full-width {
+            grid-column: span 2;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            margin-bottom: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #444;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            background-color: #fcfcfc;
+        }
+
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            border-color: #EE5F26;
+            background-color: #fff;
+            box-shadow: 0 0 8px rgba(238, 95, 38, 0.15);
+            outline: none;
+        }
+
+        /* Button Styling */
+        .btn-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-next {
+            background-color: #EE5F26;
+            color: white;
+            margin-left: auto;
+        }
+
+        .btn-next:hover { background-color: #003366; }
+
+        .btn-prev {
+            background-color: #e0e0e0;
+            color: #333;
+        }
+
+        .btn-prev:hover { background-color: #d5d5d5; }
+
+        .btn-submit {
+            background-color: #27ae60;
+            color: white;
+        }
+
+        .btn-submit:hover { background-color: #219653; }
+
+        /* ADVANCED SUCCESS MODAL POPUP */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            padding: 20px;
+        }
+
+        .success-modal {
+            background: #fff;
+            max-width: 550px;
+            width: 100%;
+            border-radius: 16px;
+            padding: 35px;
+            text-align: center;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            animation: popUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes popUp {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        /* Animated Success Icon */
+        .success-icon-box {
+            width: 80px;
+            height: 80px;
+            background: #e8f8f0;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 20px auto;
+        }
+
+        .checkmark-svg {
+            width: 45px;
+            height: 45px;
+            fill: none;
+            stroke: #27ae60;
+            stroke-width: 4;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            stroke-dasharray: 100;
+            stroke-dashoffset: 100;
+            animation: dash 0.8s ease-in-out forwards 0.2s;
+        }
+
+        @keyframes dash {
+            to { stroke-dashoffset: 0; }
+        }
+
+        .modal-title {
+            color: #27ae60;
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .modal-desc {
+            color: #666;
+            font-size: 0.95rem;
+            margin-bottom: 25px;
+        }
+
+        /* Summary Receipt Table Layout */
+        .summary-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 25px;
+            text-align: left;
+            background: #f9fbfd;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+        }
+
+        .summary-table tr {
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .summary-table tr:last-child {
+            border-bottom: none;
+        }
+
+        .summary-table td {
+            padding: 12px 15px;
+            font-size: 0.9rem;
+        }
+
+        .summary-table td.label-cell {
+            font-weight: 600;
+            color: #4a5568;
+            width: 45%;
+        }
+
+        .summary-table td.value-cell {
+            color: #1a202c;
+            font-weight: 500;
+        }
+
+        .btn-close-modal {
+            background-color: #003366;
+            color: white;
+            padding: 12px 35px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-close-modal:hover {
+            background-color: #EE5F26;
+        }
+
+        /* BANK OF BARODA AUTHENTIC COLOR SCHEME FOOTER */
+        .bob-footer {
+            background-color: #003366; /* BoB Corporate Navy Dark */
+            color: #ffffff;
+            font-size: 13px;
+            margin-top: 60px;
+            width: 100%;
+        }
+
+        .bob-footer-top {
+            background-color: #EE5F26; /* BoB Genuine Vermilion Orange Accent strip */
+            padding: 15px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+        }
+
+        .bob-footer-top-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .bob-contact-info span {
+            margin-right: 20px;
+            font-weight: 600;
+        }
+
+        .bob-contact-info strong {
+            color: #ffffff; /* Contrast adjusted over orange bar */
+            background-color: rgba(0, 0, 0, 0.2);
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+
+        .bob-footer-main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+        }
+
+        .bob-footer-col h4 {
+            color: #EE5F26; /* BoB Branding Orange headings */
+            font-size: 15px;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            font-weight: 700;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 5px;
+        }
+
+        .bob-footer-col ul {
+            list-style: none;
+        }
+
+        .bob-footer-col ul li {
+            margin-bottom: 8px;
+        }
+
+        .bob-footer-col ul li a {
+            color: #d1dbe0;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .bob-footer-col ul li a:hover {
+            color: #EE5F26;
+            text-decoration: underline;
+        }
+
+        .bob-disclaimer-box {
+            grid-column: span 4;
+            background-color: rgba(0, 0, 0, 0.15);
+            padding: 15px;
+            border-radius: 4px;
+            font-size: 11px;
+            line-height: 1.5;
+            color: #b0c4de;
+            text-align: justify;
+            border-left: 3px solid #EE5F26;
+        }
+
+        .bob-footer-bottom {
+            background-color: #002244;
+            padding: 15px 20px;
+            text-align: center;
+            font-size: 12px;
+            color: #9cb4be;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .bob-footer-bottom p {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .footer-links-inline a {
+            color: #9cb4be;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+
+        .footer-links-inline a:hover {
+            color: #fff;
+        }
+
+        @media (max-width: 768px) {
+            .logo-container { padding: 15px 20px; justify-content: center; } /* Centers on small devices for better UI */
+            .form-grid { grid-template-columns: 1fr; }
+            .full-width { grid-column: span 1; }
+            .main-title { font-size: 1.8rem; }
+            .bob-footer-main { grid-template-columns: repeat(2, 1fr); }
+            .bob-disclaimer-box { grid-column: span 2; }
+            .bob-footer-top-container, .bob-footer-bottom p { flex-direction: column; text-align: center; }
+        }
+
+        @media (max-width: 480px) {
+            .bob-footer-main { grid-template-columns: 1fr; }
+            .bob-disclaimer-box { grid-column: span 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Bank of Baroda Left-Aligned Logo Section -->
+    <header class="logo-container">
+        <img src="https://i.ibb.co/hJtXS16k/images-14.png" alt="Bank of Baroda Full Width Logo">
+    </header>
+
+    <div class="container">
+        <h1 class="main-title">Customer Service Point</h1>
+        <p class="sub-title">Bank of Baroda Kiosk Registration Portal</p>
+
+        <!-- Progress Stepper Bar -->
+        <div class="progress-container">
+            <div class="progress" id="progress"></div>
+            <div class="circle active">1</div>
+            <div class="circle">2</div>
+            <div class="circle">3</div>
+            <div class="circle">4</div>
+        </div>
+
+        <form id="cspForm" onsubmit="handleFormSubmit(event)" enctype="multipart/form-data">
+            
+            <!-- STEP 1: PERSONAL DETAILS (1-10) -->
+            <div class="form-step active">
+                <div class="section-header">Step 1: Personal Details</div>
+                <div class="form-grid">
+                    <div class="form-group"><label>1. Full Name *</label><input type="text" id="form-name" placeholder="Enter full name" required></div>
+                    <div class="form-group"><label>2. Father's / Husband's Name *</label><input type="text" placeholder="Enter father or husband name" required></div>
+                    <div class="form-group"><label>3. Mother's Name *</label><input type="text" placeholder="Enter mother name" required></div>
+                    <div class="form-group"><label>4. Date of Birth *</label><input type="date" required></div>
+                    <div class="form-group">
+                        <label>5. Gender *</label>
+                        <select required><option value="">Select Gender</option><option>Male</option><option>Female</option><option>Other</option></select>
+                    </div>
+                    <div class="form-group">
+                        <label>6. Marital Status *</label>
+                        <select required><option value="">Select Status</option><option>Single</option><option>Married</option></select>
+                    </div>
+                    <div class="form-group"><label>7. Mobile Number *</label><input type="tel" id="form-mobile" maxlength="10" placeholder="10-digit primary number" required></div>
+                    <div class="form-group"><label>8. Alternate Mobile Number</label><input type="tel" maxlength="10" placeholder="Optional mobile number"></div>
+                    <div class="form-group"><label>9. Email ID *</label><input type="email" id="form-email" placeholder="example@domain.com" required></div>
+                    <div class="form-group">
+                        <label>10. Educational Qualification *</label>
+                        <select required><option value="">Select Qualification</option><option>10th Pass</option><option>12th Pass</option><option>Graduate</option><option>Post Graduate</option></select>
+                    </div>
+                </div>
+                <div class="btn-container">
+                    <button type="button" class="btn btn-next" onclick="nextStep()">Next</button>
+                </div>
+            </div>
+
+            <!-- STEP 2: ADDRESS & IDENTITY (11-20) -->
+            <div class="form-step">
+                <div class="section-header">Step 2: Identity & Permanent Address</div>
+                <div class="form-grid">
+                    <div class="form-group"><label>11. Aadhaar Card Number *</label><input type="text" id="form-aadhaar" maxlength="12" placeholder="12-digit UIDAI number" required></div>
+                    <div class="form-group"><label>12. PAN Card Number *</label><input type="text" id="form-pan" maxlength="10" placeholder="Permanent Account Number" required></div>
+                    <div class="form-group">
+                        <label>13. Category *</label>
+                        <select required><option value="">Select Category</option><option>General</option><option>OBC</option><option>SC</option><option>ST</option></select>
+                    </div>
+                    <div class="form-group"><label>14. Nationality *</label><input type="text" value="Indian" readonly required></div>
+                    <div class="form-group full-width"><label>15. Permanent Address *</label><input type="text" placeholder="House No, Village, Landmark, Street" required></div>
+                    <div class="form-group"><label>16. State *</label><input type="text" id="form-state" placeholder="Enter state name" required></div>
+                    <div class="form-group"><label>17. District *</label><input type="text" placeholder="Enter district name" required></div>
+                    <div class="form-group"><label>18. Block / Tehsil *</label><input type="text" placeholder="Enter block or tehsil" required></div>
+                    <div class="form-group"><label>19. Gram Panchayat / City *</label><input type="text" placeholder="Enter city or panchayat name" required></div>
+                    <div class="form-group"><label>20. Pin Code *</label><input type="text" maxlength="6" placeholder="6-digit postal code" required></div>
+                </div>
+                <div class="btn-container">
+                    <button type="button" class="btn btn-prev" onclick="prevStep()">Previous</button>
+                    <button type="button" class="btn btn-next" onclick="nextStep()">Next</button>
+                </div>
+            </div>
+
+            <!-- STEP 3: SHOP & INFRASTRUCTURE (21-33) -->
+            <div class="form-step">
+                <div class="section-header">Step 3: Proposed CSP & Infrastructure Details</div>
+                <div class="form-grid">
+                    <div class="form-group"><label>21. Shop / Outlet Name *</label><input type="text" id="form-shop" placeholder="e.g., Baroda Digital Banking Center" required></div>
+                    <div class="form-group">
+                        <label>22. Shop Ownership *</label>
+                        <select required><option value="">Select Ownership</option><option>Owned</option><option>Rented</option></select>
+                    </div>
+                    <div class="form-group full-width"><label>23. Shop Full Address *</label><input type="text" placeholder="Exact location layout address of CSP" required></div>
+                    <div class="form-group"><label>24. Shop State *</label><input type="text" placeholder="Shop state" required></div>
+                    <div class="form-group"><label>25. Shop District *</label><input type="text" placeholder="Shop district" required></div>
+                    <div class="form-group"><label>26. Shop Area Pincode *</label><input type="text" maxlength="6" placeholder="Shop location pincode" required></div>
+                    <div class="form-group"><label>27. Nearest Bank Branch Name *</label><input type="text" placeholder="Name of nearest link branch" required></div>
+                    <div class="form-group"><label>28. Distance from Bank Branch (in KM) *</label><input type="number" step="0.1" placeholder="Distance in kilometers" required></div>
+                    <div class="form-group">
+                        <label>29. Area Type *</label>
+                        <select required><option value="">Select Area Type</option><option>Rural</option><option>Urban</option><option>Semi-Urban</option></select>
+                    </div>
+                    <div class="form-group">
+                        <label>30. Internet Availability *</label>
+                        <select required><option value="">Select Connection</option><option>Broadband / FTTH</option><option>Mobile Network 4G/5G</option></select>
+                    </div>
+                    <div class="form-group"><label>31. Existing Bank Account No.</label><input type="text" placeholder="Optional current/savings account"></div>
+                    <div class="form-group"><label>32. Bank IFSC Code</label><input type="text" placeholder="11-character bank code"></div>
+                    <div class="form-group">
+                        <label>33. Computer / Laptop Available? *</label>
+                        <select required><option>Yes</option><option>No</option></select>
+                    </div>
+                </div>
+                <div class="btn-container">
+                    <button type="button" class="btn btn-prev" onclick="prevStep()">Previous</button>
+                    <button type="button" class="btn btn-next" onclick="nextStep()">Next</button>
+                </div>
+            </div>
+
+            <!-- STEP 4: HARDWARE & DOCUMENTS (34-42) -->
+            <div class="form-step">
+                <div class="section-header">Step 4: Equipment & Documents Upload</div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>34. Biometric Device Available? *</label>
+                        <select required><option>Yes</option><option>No</option></select>
+                    </div>
+                    <div class="form-group">
+                        <label>35. Power Backup / Inverter? *</label>
+                        <select required><option>Yes</option><option>No</option></select>
+                    </div>
+                    <div class="form-group">
+                        <label>36. IIBF Certification Available?</label>
+                        <select><option>No</option><option>Yes</option></select>
+                    </div>
+                    <div class="form-group"><label>37. Upload Passport Size Photo *</label><input type="file" accept="image/*" required></div>
+                    <div class="form-group"><label>38. Upload Aadhaar Card (PDF/Image) *</label><input type="file" accept="image/*,application/pdf" required></div>
+                    <div class="form-group"><label>39. Upload PAN Card (PDF/Image) *</label><input type="file" accept="image/*,application/pdf" required></div>
+                    <div class="form-group"><label>40. Upload Highest Qualification Marksheet *</label><input type="file" accept="image/*,application/pdf" required></div>
+                    <div class="form-group full-width">
+                        <label>41. Clean Police Record Status? *</label>
+                        <select required><option value="">Select Verification Status</option><option>Yes, Clean Record (No Criminal Cases)</option><option>No</option></select>
+                    </div>
+                    <div class="form-group full-width" style="flex-direction: row; gap: 10px; align-items: center; margin-top: 15px;">
+                        <input type="checkbox" id="terms" style="width: 20px; height: 20px;" required>
+                        <label for="terms" style="margin: 0; font-size: 0.85rem; color: #555;">42. I hereby declare that all the information provided above is true, complete and correct to the best of my knowledge. *</label>
+                    </div>
+                </div>
+                <div class="btn-container">
+                    <button type="button" class="btn btn-prev" onclick="prevStep()">Previous</button>
+                    <button type="submit" class="btn btn-submit">Submit Application</button>
+                </div>
+            </div>
+
+        </form>
+    </div>
+
+    <!-- SUCCESS MODAL BOX -->
+    <div class="modal-overlay" id="successModal">
+        <div class="success-modal">
+            <div class="success-icon-box">
+                <svg class="checkmark-svg" viewBox="0 0 52 52">
+                    <path d="M14 27 l7 7 l17 -17"/>
+                </svg>
+            </div>
+            <h2 class="modal-title">Submission Successful!</h2>
+            <p class="modal-desc">Your CSP registration form has been logged securely into our servers.</p>
+            
+            <!-- Summary Table of 8 Crucial Details -->
+            <table class="summary-table">
+                <tr>
+                    <td class="label-cell">Application ID</td>
+                    <td class="value-cell" id="lbl-appid" style="color: #27ae60; font-weight: bold;"></td>
+                </tr>
+                <tr>
+                    <td class="label-cell">Applicant Name</td>
+                    <td class="value-cell" id="lbl-name"></td>
+                </tr>
+                <tr>
+                    <td class="label-cell">Mobile Number</td>
+                    <td class="value-cell" id="lbl-mobile"></td>
+                </tr>
+                <tr>
+                    <td class="label-cell">Email Address</td>
+                    <td class="value-cell" id="lbl-email"></td>
+                </tr>
+                <tr>
+                    <td class="label-cell">Aadhaar Card No.</td>
+                    <td class="value-cell" id="lbl-aadhaar"></td>
+                </tr>
+                <tr>
+                    <td class="label-cell">PAN Card No.</td>
+                    <td class="value-cell" id="lbl-pan"></td>
+                </tr>
+                <tr>
+                    <td class="label-cell">Shop/Outlet Name</td>
+                    <td class="value-cell" id="lbl-shop"></td>
+                </tr>
+                <tr>
+                    <td class="label-cell">Applied State</td>
+                    <td class="value-cell" id="lbl-state"></td>
+                </tr>
+            </table>
+
+            <button class="btn-close-modal" onclick="closeModal()">Download Receipt / Close</button>
+        </div>
+    </div>
+
+    <!-- REAL BANK OF BARODA FOOTER WITH UPDATED ACCENT COLOR -->
+    <footer class="bob-footer">
+        <div class="bob-footer-top">
+            <div class="bob-footer-top-container">
+                <div class="bob-contact-info">
+                    <span>Contact Centre Helpline (Toll Free): <strong>1800 5700</strong> / <strong>1800 258 4455</strong></span>
+                    <span>BOB Kiosk Support: <strong>1800 102 4455</strong></span>
+                </div>
+                <div>
+                    <span>Site Best Viewed in Chrome, Firefox & Edge</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="bob-footer-main">
+            <div class="bob-footer-col">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="#">BOB Corporate Website</a></li>
+                    <li><a href="#">Baroda Connect Net Banking</a></li>
+                    <li><a href="#">Bob World Mobile Banking</a></li>
+                    <li><a href="#">Baroda Kiosk Portal</a></li>
+                </ul>
+            </div>
+            <div class="bob-footer-col">
+                <h4>Important Links</h4>
+                <ul>
+                    <li><a href="#">BC/CSP Login Desk</a></li>
+                    <li><a href="#">IIBF Exam Schedules</a></li>
+                    <li><a href="#">Aadhaar Seeding Status</a></li>
+                    <li><a href="#">PMJDY Baroda Central</a></li>
+                </ul>
+            </div>
+            <div class="bob-footer-col">
+                <h4>Security & Privacy</h4>
+                <ul>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Fair Practice Code</a></li>
+                    <li><a href="#">Baroda Cyber Security Tips</a></li>
+                    <li><a href="#">Report Incident/Fraud</a></li>
+                </ul>
+            </div>
+            <div class="bob-footer-col">
+                <h4>Regulatory Info</h4>
+                <ul>
+                    <li><a href="#">RBI Kehta Hai Portal</a></li>
+                    <li><a href="#">BC Registry Directory</a></li>
+                    <li><a href="#">BOB Grievance Cell</a></li>
+                    <li><a href="#">Code of Commitment</a></li>
+                </ul>
+            </div>
+
+            <div class="bob-disclaimer-box">
+                <strong>Disclaimer:</strong> Bank of Baroda never asks for your PIN, OTP, Password or Net Banking credentials via Phone Call, SMS or Email. Please beware of any fraudulent CSP verification calls, unauthorized agencies, or phishing links. This portal is strictly used for primary profile logging of authorized Business Correspondents (BC) and new Customer Service Point kiosk applicants. Submitting this digital profile form does not guarantee confirmation; allocation is purely subject to physical infrastructure verification by the respective regional office and compliance rules.
+            </div>
+        </div>
+
+        <div class="bob-footer-bottom">
+            <p>
+                <span>&copy; 2026 Bank of Baroda. All rights reserved.</span>
+                <span class="footer-links-inline">
+                    <a href="#">Terms of Use</a> | 
+                    <a href="#">Sitemap</a> | 
+                    <a href="#">Corporate Sustainability</a>
+                </span>
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        const formSteps = document.querySelectorAll(".form-step");
+        const circles = document.querySelectorAll(".circle");
+        const progress = document.getElementById("progress");
+        let currentStep = 0;
+
+        function updateSteps() {
+            formSteps.forEach((step, index) => {
+                step.classList.toggle("active", index === currentStep);
+            });
+
+            circles.forEach((circle, index) => {
+                circle.classList.toggle("active", index <= currentStep);
+            });
+
+            const activeCircles = document.querySelectorAll(".circle.active");
+            progress.style.width = ((activeCircles.length - 1) / (circles.length - 1)) * 100 + "%";
+        }
+
+        function nextStep() {
+            const currentInputs = formSteps[currentStep].querySelectorAll("input[required], select[required]");
+            let valid = true;
+            
+            currentInputs.forEach(input => {
+                if(!input.value) {
+                    valid = false;
+                    input.style.borderColor = "red";
+                } else {
+                    input.style.borderColor = "#ccc";
+                }
+            });
+
+            if(!valid) {
+                alert("Please fill out all the mandatory (*) fields before moving to the next step.");
+                return;
+            }
+
+            if (currentStep < formSteps.length - 1) {
+                currentStep++;
+                updateSteps();
+                window.scrollTo({top: 200, behavior: 'smooth'});
+            }
+        }
+
+        function prevStep() {
+            if (currentStep > 0) {
+                currentStep--;
+                updateSteps();
+                window.scrollTo({top: 200, behavior: 'smooth'});
+            }
+        }
+
+        /* LIVE MODAL HANDLING JAVASCRIPT */
+        function handleFormSubmit(event) {
+            event.preventDefault(); 
+            
+            // Bank of Baroda Format Application ID
+            const randomAppId = "BOB-CSP-" + Math.floor(100000 + Math.random() * 900000);
+
+            document.getElementById("lbl-appid").innerText = randomAppId;
+            document.getElementById("lbl-name").innerText = document.getElementById("form-name").value;
+            document.getElementById("lbl-mobile").innerText = document.getElementById("form-mobile").value;
+            document.getElementById("lbl-email").innerText = document.getElementById("form-email").value;
+            
+            // Masking for Privacy Compliance
+            const rawAadhaar = document.getElementById("form-aadhaar").value;
+            document.getElementById("lbl-aadhaar").innerText = "XXXXXXXX" + rawAadhaar.slice(-4);
+            
+            document.getElementById("lbl-pan").innerText = document.getElementById("form-pan").value.toUpperCase();
+            document.getElementById("lbl-shop").innerText = document.getElementById("form-shop").value;
+            document.getElementById("lbl-state").innerText = document.getElementById("form-state").value;
+
+            document.getElementById("successModal").style.display = "flex";
+        }
+
+        function closeModal() {
+            document.getElementById("successModal").style.display = "none";
+            document.getElementById("cspForm").reset(); 
+            currentStep = 0;
+            updateSteps();
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        }
+    </script>
+</body>
+</html>
